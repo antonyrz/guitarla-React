@@ -2,7 +2,12 @@ export default Header
 
 function Header(){
 
+    const name = "Juan"
+
     return(
-        <h1>Desde header</h1>
+        <>
+            <p>Hola: {name}</p>
+            <h1>hola</h1>
+        </>
     )
 }
