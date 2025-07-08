@@ -1,13 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from './components/Header'
 import Guitar from './components/Guitar'
+import { db } from './data/db';
 
 function App() {
 
   // State
-  const [auth, setAuth] = useState(false);
-
-  console.log(auth);
+  const [data, setData] = useState(db);
+ console.log(db);
 
   return (
     <>
