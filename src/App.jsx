@@ -7,6 +7,7 @@ function App() {
 
   // State
   const [data, setData] = useState(db);
+  const [cart, setCart] = useState([]);
 
   return (
     <>
@@ -22,6 +23,7 @@ function App() {
               <Guitar 
                 key={guitar.id}
                 guitar={guitar}
+                setCart={setCart}
               />
             ))}
 
