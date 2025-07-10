@@ -15,12 +15,14 @@ function App() {
     
     if(ItemExists >= 0){
       console.log("Ya existe")
+      const updatedCart = [...cart]
+      updatedCart[ItemExists].quantity++
+      setCart(updatedCart);
     }else{
       console.log("No existe, agregando...")
       item.quantity = 1;
       setCart([...cart, item]);
     }
-
 
   };
 
