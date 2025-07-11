@@ -1,12 +1,13 @@
 export default Header
-import { useState } from "react"
 
-function Header({cart}){
+import { useMemo } from "react";
+
+function Header({cart, deleteFromCart}){
 
     //?State Derivado
-    const isEmpty = () => cart.length === 0;
+    const isEmpty = useMemo( () => cart.length === 0, [cart]);
 
-    const cartTotal = () => cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const cartTotal = useMemo( () => cart.reduce((total, item) => total + (item.price * item.quantity), 0), [cart]);
 
     return(
         <>
@@ -25,7 +26,7 @@ function Header({cart}){
                             <img className="img-fluid" src="./public/img/carrito.png" alt="imagen carrito" />
 
                             <div id="carrito" className="bg-white p-3">
-                                {isEmpty() ? (
+                                {isEmpty ? (
                                     <p className="text-center">El carrito esta vacio</p>
                                 ) : (
                                     <>
@@ -68,17 +69,18 @@ function Header({cart}){
                                                         <button
                                                             className="btn btn-danger"
                                                             type="button"
+                                                            onClick={() => deleteFromCart(guitar.id)}
                                                         >
                                                             X
                                                         </button>
                                                     </td>
                                                 </tr>
-                                            ))};
+                                            ))}
                                         
                                         </tbody>
                                     </table>
                                
-                                    <p className="text-end">Total pagar: <span className="fw-bold">${cartTotal()}</span></p>
+                                    <p className="text-end">Total pagar: <span className="fw-bold">${cartTotal}</span></p>
                                     </>
                                 )}
                                 <button className="btn btn-dark w-100 mt-3 p-2">Vaciar Carrito</button>

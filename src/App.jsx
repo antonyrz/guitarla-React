@@ -26,11 +26,18 @@ function App() {
 
   };
 
+  // const deleteFromCart = itemId =>  setCart(prevCart => prevCart.filter(guitar => guitar.id !== itemId));
+
+  function deleteFromCart(itemId) {
+    setCart(prevCart => prevCart.filter(guitar => guitar.id !== itemId));
+  }
+
   return (
     <>
 
     <Header 
       cart={cart}
+      deleteFromCart={deleteFromCart}
     />
 
     <main className="container-xl mt-5">
