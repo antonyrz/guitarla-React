@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
 import Header from './components/Header'
 import Guitar from './components/Guitar'
@@ -6,12 +6,22 @@ import { db } from './data/db';
 
 function App() {
 
+  
+  const initialCart = () => {
+    const localStorageCart = JSON.parse(localStorage.getItem('cart')) || [];
+    return localStorageCart
+  }
+
   // State
   const [data, setData] = useState(db);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(initialCart);
 
   const MAX_ITEMS = 5
   const MIN_ITEMS = 1
+
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
 
   function clearCart(){
     setCart([]);
@@ -33,6 +43,7 @@ function App() {
       item.quantity = 1;
       setCart([...cart, item]);
     };
+
   };
 
   // const deleteFromCart = itemId =>  setCart(prevCart => prevCart.filter(guitar => guitar.id !== itemId));
@@ -69,15 +80,16 @@ function App() {
   function increaseQuantity(itemId){
 
     const updatedCart = cart.map(item => {
-      if(item.id === itemId && item.quantity < MAX_ITEMS){
-        return {
-          ...item,
-          quantity: item.quantity + 1,
-        }
-      }else{
+      if(item.id === itemId){
+        if(item.quantity < MAX_ITEMS){
+          return {
+            ...item,
+            quantity: item.quantity + 1,
+          }
+        }else{
           showAlert("Máximo 5 por ítem");
-        };
-
+        }
+      }
       return item
     });
 
