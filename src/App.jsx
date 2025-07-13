@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import Swal from 'sweetalert2'
 import Header from './components/Header'
 import Guitar from './components/Guitar'
 import { db } from './data/db';
@@ -11,49 +12,58 @@ function App() {
 
   const MAX_ITEMS = 5
   const MIN_ITEMS = 1
+
+  function clearCart(){
+    setCart([]);
+  };
   
   function addToCart(item){
     
     const ItemExists = cart.findIndex(guitar => guitar.id === item.id);
     
     if(ItemExists >= 0){
-      console.log("Ya existe")
-      const updatedCart = [...cart]
-      updatedCart[ItemExists].quantity++
-      setCart(updatedCart);
+        if(cart[ItemExists].quantity < MAX_ITEMS){
+          const updatedCart = [...cart]
+          updatedCart[ItemExists].quantity++
+          setCart(updatedCart);
+        }else{
+          showAlert("Máximo 5 por ítem");
+        }
     }else{
-      console.log("No existe, agregando...")
       item.quantity = 1;
       setCart([...cart, item]);
-    }
-
+    };
   };
 
   // const deleteFromCart = itemId =>  setCart(prevCart => prevCart.filter(guitar => guitar.id !== itemId));
 
   function deleteFromCart(itemId) {
     setCart(prevCart => prevCart.filter(guitar => guitar.id !== itemId));
+  };
+
+  function showAlert(message){
+    Swal.fire({
+    position: "top-end",
+    icon: "error",
+    title: message,
+    showConfirmButton: false,
+    timer: 1500
+  });
   }
 
   function reduceQuantity(itemId){
 
     const updatedCart = cart.map(item => {
-      if(item.id === itemId) {
-
-        if(item.quantity > MIN_ITEMS){
+      if(item.id === itemId && item.quantity > MIN_ITEMS) {
           return {
             ...item,
             quantity: item.quantity - 1
           }
-        }
       }
         return item
     });
-
-    console.log(updatedCart);
     
     setCart(updatedCart);
-    
   }
 
   function increaseQuantity(itemId){
@@ -62,9 +72,11 @@ function App() {
       if(item.id === itemId && item.quantity < MAX_ITEMS){
         return {
           ...item,
-          quantity: item.quantity + 1
+          quantity: item.quantity + 1,
         }
-      }
+      }else{
+          showAlert("Máximo 5 por ítem");
+        };
 
       return item
     });
@@ -77,6 +89,7 @@ function App() {
 
     <Header 
       cart={cart}
+      clearCart={clearCart}
       deleteFromCart={deleteFromCart}
       reduceQuantity={reduceQuantity}
       increaseQuantity={increaseQuantity}
